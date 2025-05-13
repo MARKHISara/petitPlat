@@ -3,11 +3,53 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { 
+  Box, 
+  TextField, 
+  Button, 
+  Typography, 
+  Container, 
+  Paper, 
+  Link as MuiLink,
+  Divider,
+  InputAdornment,
+  IconButton
+} from '@mui/material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { styled } from '@mui/system';
+
+const StyledPaper = styled(Paper)(({ theme }) => ({
+  marginTop: theme.spacing(8),
+  padding: theme.spacing(4),
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  backgroundColor: '#f8f8f8',
+  borderRadius: '12px',
+  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
+}));
+
+const StyledForm = styled('form')(({ theme }) => ({
+  width: '100%',
+  marginTop: theme.spacing(3),
+}));
+
+const SubmitButton = styled(Button)(({ theme }) => ({
+  margin: theme.spacing(3, 0, 2),
+  backgroundColor: '#982b2b',
+  '&:hover': {
+    backgroundColor: '#7a2323',
+  },
+  padding: theme.spacing(1.5),
+  borderRadius: '8px',
+  fontWeight: 'bold',
+}));
 
 const LoginPage = () => {
   const { login } = useAuth();
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -15,6 +57,10 @@ const LoginPage = () => {
       ...prev,
       [e.target.name]: e.target.value,
     }));
+  };
+
+  const handleClickShowPassword = () => {
+    setShowPassword(!showPassword);
   };
 
   const handleSubmit = async (e) => {
@@ -33,13 +79,12 @@ const LoginPage = () => {
         formData,
         {
           headers: {
-          'Content-Type': 'application/json',
+            'Content-Type': 'application/json',
             Accept: 'application/json',
           },
-          withCredentials: true, // C'est essentiel pour Sanctum
+          withCredentials: true,
         }
       );
-      
 
       const { token, user } = response.data;
 
@@ -88,41 +133,96 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded shadow">
-      <h2 className="text-2xl font-bold mb-4">Connexion</h2>
+    <Container component="main" maxWidth="xs">
+      <StyledPaper elevation={3}>
+        <Typography component="h1" variant="h4" color="#982b2b" fontWeight="bold">
+          Connexion
+        </Typography>
+        
+        <Typography variant="body2" color="textSecondary" align="center" mt={2}>
+          Pas encore de compte ?{' '}
+          <MuiLink component={Link} to="/register" color="#982b2b" fontWeight="bold">
+            Créez-en un ici
+          </MuiLink>
+        </Typography>
 
-      <div className="text-center mb-4">
-        <span>Pas encore de compte ? </span>
-        <Link to="/register" className="text-blue-500 hover:text-orange-500">
-          Créez-en un ici
-        </Link>
-      </div>
+        {error && (
+          <Box mt={2} width="100%">
+            <Typography color="error" align="center">
+              {error}
+            </Typography>
+          </Box>
+        )}
 
-      {error && <div className="text-red-500 mb-2">{error}</div>}
-
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <input
-          type="email"
-          name="email"
-          placeholder="Adresse e-mail"
-          value={formData.email}
-          onChange={handleChange}
-          className="w-full p-2 border rounded"
-        />
-        <input
-          type="password"
-          name="password"
-          placeholder="Mot de passe"
-          value={formData.password}
-          onChange={handleChange}
-          className="w-full p-2 border rounded"
-          required
-        />
-        <button type="submit" className="w-full bg-black text-white p-2 rounded hover:bg-orange-500">
-          Se connecter
-        </button>
-      </form>
-    </div>
+        <StyledForm onSubmit={handleSubmit}>
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            id="email"
+            label="Adresse e-mail"
+            name="email"
+            autoComplete="email"
+            autoFocus
+            value={formData.email}
+            onChange={handleChange}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                borderRadius: '8px',
+              },
+            }}
+          />
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            name="password"
+            label="Mot de passe"
+            type={showPassword ? 'text' : 'password'}
+            id="password"
+            autoComplete="current-password"
+            value={formData.password}
+            onChange={handleChange}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                borderRadius: '8px',
+              },
+            }}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={handleClickShowPassword}
+                    edge="end"
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+          />
+          
+          <SubmitButton
+            type="submit"
+            fullWidth
+            variant="contained"
+          >
+            Se connecter
+          </SubmitButton>
+          
+          <Divider sx={{ my: 2 }} />
+          
+          <Box textAlign="center" mt={2}>
+            <MuiLink component={Link} to="/forgot-password" color="#982b2b" fontWeight="bold">
+              Mot de passe oublié ?
+            </MuiLink>
+          </Box>
+        </StyledForm>
+      </StyledPaper>
+    </Container>
   );
 };
 

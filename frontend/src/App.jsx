@@ -14,7 +14,6 @@ import AboutUs from "./component/AboutUs";
 import RecipeList from "./component/RecipesCard";
 import DashboardLayout from "./User/DashboardLayout";
 
-
 function App() {
   return (
     <Router>

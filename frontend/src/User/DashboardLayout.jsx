@@ -26,9 +26,9 @@ const DashboardLayout = ({ children }) => {
     { to: "/profile", label: "Mon Profil", icon: <User className="w-5 h-5" /> },
     { to: "/mes-recettes", label: "Mes Recettes", icon: <Utensils className="w-5 h-5" /> },
     { to: "/ajouter-recette", label: "Ajouter Recette", icon: <PlusCircle className="w-5 h-5" /> },
-    { to: "/equipe", label: "Mon Équipe", icon: <Users className="w-5 h-5" /> },
-    { to: "/historique", label: "Historique", icon: <Clock className="w-5 h-5" /> },
-    { to: "/parametres", label: "Paramètres", icon: <Settings className="w-5 h-5" /> },
+    // { to: "/equipe", label: "Mon Équipe", icon: <Users className="w-5 h-5" /> },
+    // { to: "/historique", label: "Historique", icon: <Clock className="w-5 h-5" /> },
+    // { to: "/parametres", label: "Paramètres", icon: <Settings className="w-5 h-5" /> },
   ];
 
   return (

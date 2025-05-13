@@ -1,66 +1,168 @@
-import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import Header from "../component/Header";
-import Footer from "../component/Footer";
-import { FaHome, FaTasks, FaUsers,FaUser, FaClock, FaEdit, FaCog } from "react-icons/fa";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
-class Profile extends Component {
-  render() {
-    return (
-      <div className="min-h-screen bg-gray-100 text-gray-800">
-        
+const Profile = () => {
+  const [userData, setUserData] = useState({
+    name: '',
+    email: '',
+    avatar: '',
+    bio: ''
+  });
+  const [message, setMessage] = useState('');
+  const [error, setError] = useState('');
 
-        <div className="flex">
-          <aside className="w-64 bg-white p-6 mt-1 " >
-            <nav className="space-y-3">
-              <SidebarLink to="/profile" label="Mon Profile" icon={<FaUser />} />
-              <SidebarLink to="/Myrecepies" label="Mes Recettes" icon={<FaTasks />} />
-              <SidebarLink to="/team" label="Manage Team" icon={<FaUsers />} />
-              <SidebarLink to="/reports" label="Hours Reports" icon={<FaClock />} />
-              <SidebarLink to="/edit-time" label="Edit Time" icon={<FaEdit />} />
-              <SidebarLink to="/settings" label="Settings" icon={<FaCog />} />
-            </nav>
-          </aside>
+  // Récupérer les données de l'utilisateur au chargement
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await axios.get('/api/user', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        setUserData({
+          name: response.data.name,
+          email: response.data.email,
+          avatar: response.data.avatar || '',
+          bio: response.data.bio || ''
+        });
+      } catch (err) {
+        setError('Erreur lors de la récupération des données utilisateur');
+      }
+    };
 
-       
-        </div>
+    fetchUserData();
+  }, []);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setUserData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleFileChange = (e) => {
+    setUserData(prev => ({
+      ...prev,
+      avatar: e.target.files[0]
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setMessage('');
+    setError('');
+
+    try {
+      const token = localStorage.getItem('token');
+      const formData = new FormData();
       
-      </div>
-    );
-  }
-}
+      formData.append('name', userData.name);
+      formData.append('email', userData.email);
+      formData.append('bio', userData.bio);
+      if (userData.avatar instanceof File) {
+        formData.append('avatar', userData.avatar);
+      }
 
-class SidebarLink extends Component {
-  render() {
-    const { to, label, icon } = this.props;
-    return (
-      <Link 
-        to={to}
-        className="flex items-center space-x-3 p-3 text-gray-700 font-medium rounded-md hover:bg-orange-50 hover:text-orange-500 transition-colors"
-      >
-        <span className="text-lg">{icon}</span>
-        <span>{label}</span>
-      </Link>
-    );
-  }
-}
+      const response = await axios.post('/api/user/update', formData, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data'
+        }
+      });
 
-class InputField extends Component {
-  render() {
-    const { label, placeholder, full } = this.props;
-    return (
-      <div className={full ? "md:col-span-2" : ""}>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
-          {label}
-        </label>
-        <input
-          type="text"
-          placeholder={placeholder}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-orange-200"
-        />
-      </div>
-    );
-  }
-}
+      setMessage('Profil mis à jour avec succès !');
+    } catch (err) {
+      setError(err.response?.data?.message || 'Erreur lors de la mise à jour du profil');
+    }
+  };
+
+  return (
+    <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
+      <h2 className="text-2xl font-bold mb-6 text-center">Mon Profil</h2>
+      
+      {message && <div className="mb-4 p-3 bg-green-100 text-green-700 rounded">{message}</div>}
+      {error && <div className="mb-4 p-3 bg-red-100 text-red-700 rounded">{error}</div>}
+
+      <form onSubmit={handleSubmit}>
+        <div className="mb-4">
+          <label className="block text-gray-700 mb-2" htmlFor="name">
+            Nom
+          </label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            value={userData.name}
+            onChange={handleChange}
+            className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+          />
+        </div>
+
+        <div className="mb-4">
+          <label className="block text-gray-700 mb-2" htmlFor="email">
+            Email
+          </label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            value={userData.email}
+            onChange={handleChange}
+            className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+          />
+        </div>
+
+        <div className="mb-4">
+          <label className="block text-gray-700 mb-2" htmlFor="avatar">
+            Avatar
+          </label>
+          <input
+            type="file"
+            id="avatar"
+            name="avatar"
+            onChange={handleFileChange}
+            className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            accept="image/*"
+          />
+          {userData.avatar && !(userData.avatar instanceof File) && (
+            <div className="mt-2">
+              <img 
+                src={userData.avatar} 
+                alt="Avatar actuel" 
+                className="h-20 w-20 rounded-full object-cover"
+              />
+            </div>
+          )}
+        </div>
+
+        <div className="mb-4">
+          <label className="block text-gray-700 mb-2" htmlFor="bio">
+            Bio
+          </label>
+          <textarea
+            id="bio"
+            name="bio"
+            value={userData.bio}
+            onChange={handleChange}
+            rows="4"
+            className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+
+        <button
+          type="submit"
+          className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition duration-200"
+        >
+          Mettre à jour
+        </button>
+      </form>
+    </div>
+  );
+};
 
 export default Profile;
