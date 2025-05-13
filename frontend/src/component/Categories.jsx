@@ -1,45 +1,68 @@
 import React from "react";
-import { FaCoffee, FaHamburger, FaDrumstickBite, FaIceCream, FaPizzaSlice } from "react-icons/fa";
+import { motion } from "framer-motion";
+import { Coffee, Sandwich, Drumstick, IceCream, Pizza } from "lucide-react";
 
 const categories = [
-  { name: "Petit-déjeuner", icon: <FaCoffee className="text-orange-500 text-2xl" /> },
-  { name: "Déjeuner", icon: <FaHamburger className="text-orange-500 text-2xl" /> },
-  { name: "Dîner", icon: <FaDrumstickBite className="text-orange-500 text-2xl" /> },
-  { name: "Dessert", icon: <FaIceCream className="text-orange-500 text-2xl" /> },
-  { name: "Snacks", icon: <FaPizzaSlice className="text-orange-500 text-2xl" /> },
+  { name: "PETIT-DÉJEUNER", icon: <Coffee className="w-6 h-6" /> },
+  { name: "DÉJEUNER", icon: <Sandwich className="w-6 h-6" /> },
+  { name: "DÎNER", icon: <Drumstick className="w-6 h-6" /> },
+  { name: "DESSERT", icon: <IceCream className="w-6 h-6" /> },
+  { name: "SNACKS", icon: <Pizza className="w-6 h-6" /> },
 ];
 
 const Categories = () => {
   return (
-    <section className="bg-[#d6efff] py-16 px-8 rounded-xl mt-[-40px] mx-6 shadow-lg">
-      <div className="flex flex-col md:flex-row justify-between items-start gap-12">
-        {/* Texte à gauche */}
-        <div className="md:w-1/2">
-          <span className="bg-orange-500 text-white text-sm px-4 py-1 rounded-full mb-3 inline-block uppercase tracking-wide">Explorer</span>
-          <h2 className="text-3xl font-bold mb-4 text-gray-900">Notre Palette Variée</h2>
-          <p className="text-gray-700 text-base mb-6 leading-relaxed">
-            Du petit-déjeuner aux snacks rapides, une collection de délices savoureux à portée de main.
-            Trouvez la recette parfaite pour chaque envie ou humeur.
-          </p>
-          <button className="bg-black text-white px-6 py-2 rounded-md hover:bg-orange-500 transition">
-            Voir Plus
-          </button>
-        </div>
-
-        {/* Grille à droite */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-6 w-full md:w-1/2">
-          {categories.map((cat, index) => (
-            <div
-              key={index}
-              className="bg-white rounded-xl p-4 shadow-md flex flex-col items-center justify-center hover:bg-orange-100 transition"
+    <motion.section 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="bg-white py-16 w-full"
+    >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col lg:flex-row justify-between items-start gap-8 lg:gap-16">
+          {/* Texte à gauche */}
+          <div className="lg:w-1/2">
+            <motion.span 
+              whileHover={{ scale: 1.05 }}
+              className="bg-gradient-to-r from-[#e27340] to-[#b0390e] text-white text-xs px-4 py-1 rounded-full mb-4 inline-block uppercase tracking-widest"
             >
-              {cat.icon}
-              <span className="mt-3 font-semibold text-gray-800">{cat.name}</span>
-            </div>
-          ))}
+              Explorer
+            </motion.span>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-[#5a3921]">
+              Notre <span className="text-[#982b2b]">Palette</span> Variée
+            </h2>
+            <p className="text-[#7a5c44] text-base mb-6 leading-relaxed">
+              Du petit-déjeuner aux snacks rapides, une collection de délices savoureux à portée de main.
+              Trouvez la recette parfaite pour chaque envie ou humeur.
+            </p>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="px-6 py-3 bg-gradient-to-r from-[#982b2b] to-[#b0390e] text-white rounded-lg hover:shadow-md transition-all"
+            >
+              Voir Plus
+            </motion.button>
+          </div>
+
+          {/* Grille à droite */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 w-full lg:w-1/2">
+            {categories.map((cat, index) => (
+              <motion.div
+                key={index}
+                whileHover={{ y: -5 }}
+                className="bg-white rounded-xl p-5 shadow-md hover:shadow-lg border border-[#f0e0d6] flex flex-col items-center justify-center hover:bg-[#f9f4f1] transition-all"
+              >
+                <div className="p-3 bg-[#f9f4f1] rounded-full mb-3 text-[#e27340]">
+                  {cat.icon}
+                </div>
+                <span className="font-medium text-[#5a3921] text-sm uppercase tracking-wider">
+                  {cat.name}
+                </span>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 };
 

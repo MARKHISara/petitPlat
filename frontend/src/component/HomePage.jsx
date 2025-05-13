@@ -12,7 +12,7 @@ const HomePage = () => {
       {/* Section Héros */}
       <section className="relative">
         <img
-          src="https://images.unsplash.com/photo-1546069901-eacef0df6022"
+          src="./petitPlat.jpg"
           alt="Cuisine"
           className="w-full h-[400px] object-cover rounded-b-xl"
         />
@@ -21,7 +21,7 @@ const HomePage = () => {
           <p className="text-lg max-w-xl mb-6">
             Explorez un monde de saveurs, découvrez des recettes artisanales et ressentez l'arôme de notre passion qui s'élève de votre cuisine.
           </p>
-          <button className="bg-orange-500 text-white px-6 py-3 rounded-full font-semibold hover:bg-orange-600 transition">
+          <button className="bg-[#982b2b] text-white px-6 py-3 rounded-full font-semibold hover:bg-orange-600 transition">
             Explorer les Recettes
           </button>
         </div>
@@ -29,6 +29,7 @@ const HomePage = () => {
 
       <Categories />
       <RecipePage/>
+      <Footer/>
      
     </div>
   );

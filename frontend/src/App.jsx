@@ -11,6 +11,8 @@ import RecipesCard from "./component/RecipesCard";
 import RecipeForm from "./User/RecipeForm";
 import EditForm from "./User/EditForm";
 import AboutUs from "./component/AboutUs";
+import RecipeList from "./component/RecipesCard";
+import DashboardLayout from "./User/DashboardLayout";
 
 
 function App() {
@@ -22,17 +24,17 @@ function App() {
         <Route path="/login" element={<LoginPage/>} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/about" element={<AboutUs />} />
-        <Route path="/profile" element={<Profile/>} />
+        <Route path="/profile" element={<DashboardLayout/>} />
         <Route path="/Myrecepies" element={<MyRecepies/>} />
 
         <Route path="/recipes/:id" element={<Details />} />
-        <Route path="/recipes" element={<RecipesCard/>} />
+        <Route path="/recipes" element={<RecipeList/>} />
         <Route path="/mes-recettes" element={<MyRecepies />} />
         <Route path="/ajouter-recette" element={<RecipeForm />} />
         <Route path="/modifier-recette/:id" element={<EditForm />} />
 
       </Routes>
-      <Footer/>
+     
     </Router>
   );
 }
