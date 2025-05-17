@@ -13,6 +13,10 @@ import EditForm from "./User/EditForm";
 import AboutUs from "./component/AboutUs";
 import RecipeList from "./component/RecipesCard";
 import DashboardLayout from "./User/DashboardLayout";
+import UserProfile from "./User/UserProfile";
+import UserComments from "./User/UserComments";
+import AddCategory from "./User/AddCategory";
+import Likes from "./User/Likes";
 
 function App() {
   return (
@@ -23,7 +27,7 @@ function App() {
         <Route path="/login" element={<LoginPage/>} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/about" element={<AboutUs />} />
-        <Route path="/profile" element={<DashboardLayout/>} />
+        <Route path="/profile" element={<UserProfile/>} />
         <Route path="/Myrecepies" element={<MyRecepies/>} />
 
         <Route path="/recipes/:id" element={<Details />} />
@@ -31,6 +35,9 @@ function App() {
         <Route path="/mes-recettes" element={<MyRecepies />} />
         <Route path="/ajouter-recette" element={<RecipeForm />} />
         <Route path="/modifier-recette/:id" element={<EditForm />} />
+        <Route path="/comment" element={<UserComments/>} />
+        <Route path="/category" element={<AddCategory/>} />
+        <Route path="/favoris" element={<Likes/>} />
 
       </Routes>
      

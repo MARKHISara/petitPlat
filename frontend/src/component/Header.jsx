@@ -54,7 +54,7 @@ const Header = () => {
           <div className="flex items-center space-x-4">
             <motion.div whileHover={{ scale: 1.1 }}>
               <Link 
-                to="/profile" 
+                to="/mes-recettes" 
                 className="flex items-center space-x-2 text-[#982b2b] hover:text-[#e27340] transition-colors"
               >
                 <FaUserCircle className="text-2xl" />

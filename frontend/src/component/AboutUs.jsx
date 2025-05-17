@@ -1,4 +1,5 @@
 import React from 'react';
+import Footer from './Footer';
 
 const AboutUs = () => {
   return (
@@ -92,8 +93,9 @@ const AboutUs = () => {
       </section>
 
       {/* CTA Section */}
-
+    <Footer/>
     </div>
+
   );
 };
 

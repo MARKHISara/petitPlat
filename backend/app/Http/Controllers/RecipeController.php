@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Recipe;
+use App\Models\Comment;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -11,33 +12,17 @@ class RecipeController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:sanctum')->only(['store', 'update', 'destroy']);
+        $this->middleware('auth:sanctum')->only(['store', 'update', 'destroy','myRecipes']);
     }
 
-    public function index()
-    {
-        $recipes = Recipe::with('category', 'user')->get();
-    
-        // Convertir les ingrédients en tableau pour chaque recette
-        foreach ($recipes as $recipe) {
-            $recipe->ingredients = preg_split("/\r\n|\n|\r/", $recipe->ingredients);
-    
-            // Ajouter l'URL de l'image
-            if ($recipe->image) {
-                $recipe->image_url = asset('storage/' . $recipe->image);
-            }
-        }
-    
-        return response()->json($recipes);
-    }
-    public function myRecipes(Request $request)
+public function index()
 {
-    $user = $request->user();
+    $recipes = Recipe::with(['category', 'user', 'comments.user'])->withCount('likes')->get();
 
-    $recipes = $user->recipes()->with('category')->get();
 
     foreach ($recipes as $recipe) {
         $recipe->ingredients = preg_split("/\r\n|\n|\r/", $recipe->ingredients);
+
         if ($recipe->image) {
             $recipe->image_url = asset('storage/' . $recipe->image);
         }
@@ -46,10 +31,29 @@ class RecipeController extends Controller
     return response()->json($recipes);
 }
 
+public function myRecipes(Request $request)
+{
+    $user = $request->user();
+
+    $recipes = $user->recipes()->with(['category', 'comments.user'])->get();
+
+    foreach ($recipes as $recipe) {
+        $recipe->ingredients = preg_split("/\r\n|\n|\r/", $recipe->ingredients);
+
+        if ($recipe->image) {
+            $recipe->image_url = asset('storage/' . $recipe->image);
+        }
+    }
+
+    return response()->json($recipes);
+}
+
+
+
     
 public function show($id)
     {
-        $recipe = Recipe::with('category', 'user')->findOrFail($id);
+        $recipe = Recipe::with('category', 'user') ->withCount('likes')->findOrFail($id);
 
         // Convertir les ingrédients en tableau
         $recipe->ingredients = preg_split("/\r\n|\n|\r/", $recipe->ingredients);
@@ -118,6 +122,27 @@ public function show($id)
         return response()->json($recipe);
     }
 
+    public function likesSummary(Request $request)
+{
+    $user = $request->user();
+
+    $recipes = $user->recipes()->with(['likes.user'])->get();
+
+    $summary = $recipes->map(function ($recipe) {
+        return [
+            'recipe_title' => $recipe->title,
+            'likes_count' => $recipe->likes->count(),
+            'liked_by' => $recipe->likes->map(function ($like) {
+                return $like->user->name;
+            })->toArray(),
+        ];
+    });
+
+    return response()->json($summary);
+}
+
+    
+
     public function destroy($id)
     {
         $recipe = Recipe::findOrFail($id);
@@ -125,4 +150,6 @@ public function show($id)
 
         return response()->json(null, 204);
     }
+
+    
 }

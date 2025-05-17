@@ -4,7 +4,7 @@ import { FaTiktok, FaUtensils } from "react-icons/fa6";
 
 export default function Footer() {
   return (
-    <footer className="bg-white from-[#f9f4f1] to-[#f0e7e0] text-[#5a3921] border-t border-[#e27340]/20">
+    <footer className="bg-white mt-3 from-[#f9f4f1] to-[#f0e7e0] text-[#5a3921] border-t border-[#e27340]/20">
       <div className="container mx-auto px-6 py-12">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Logo et description */}

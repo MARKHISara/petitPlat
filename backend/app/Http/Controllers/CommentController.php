@@ -26,13 +26,17 @@ class CommentController extends Controller
         ], 201);
     }
 
-    public function index($recipeId)
-    {
-        $comments = Comment::where('recipe_id', $recipeId)
-            ->with('user')
-            ->latest()
-            ->get();
+public function index($recipeId)
+{
+    $comments = Comment::where('recipe_id', $recipeId)
+        ->with('user')
+        ->latest()
+        ->get()
+        ->values(); 
 
-        return response()->json($comments);
-    }
+    return response()->json($comments);
+}
+
+
+
 }
